@@ -1,0 +1,186 @@
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class Calculator {
+
+    public static int convert (String rome) {
+
+        int numbers = 0;
+        switch (rome) {
+            case "I":
+                numbers = 1;
+                break;
+            case"II":
+                numbers=2;
+                break;
+            case"III":
+                numbers=3;
+                break;
+            case "IV":
+                numbers=4;
+                break;
+            case "V":
+                numbers=5;
+                break;
+            case "VI":
+                numbers = 6;
+                break;
+            case "VII":
+                numbers=7;
+                break;
+            case "VIII":
+                numbers=8;
+                break;
+            case "IX":
+                numbers=9;
+                break;
+            case "X":
+                numbers=10;
+                break;
+            case "1":
+                numbers = 1;
+                break;
+            case"2":
+                numbers=2;
+                break;
+            case"3":
+                numbers=3;
+                break;
+            case "4":
+                numbers=4;
+                break;
+            case "5":
+                numbers=5;
+                break;
+            case "6":
+                numbers = 6;
+                break;
+            case "7":
+                numbers=7;
+                break;
+            case "8":
+                numbers=8;
+                break;
+            case "9":
+                numbers=9;
+                break;
+            case "10":
+                numbers=10;
+                break;
+
+
+            default:
+                System.out.println("Invalid input");
+                System.exit(1);
+
+        }
+
+        return numbers;
+
+    }
+    public static void check(int arrayLength){
+
+        if (arrayLength != 3) {
+            System.out.println("Invalid expression");
+            System.exit(0);
+        }
+
+    }
+    public static int calculate(int a, int b, String operation) {
+        int result = 0;
+        switch (operation) {
+            case "+":
+                result = a + b;
+                break;
+            case "-":
+                result  = a - b;
+                break;
+            case "*":
+                result = a * b;
+                break;
+            case "/":
+                try {
+                    result = (a / b);
+                } catch (NumberFormatException e){
+                    System.out.println("The result is in not supported format");
+                    System.exit(0);
+                }
+                break;
+            default:
+                System.out.println("Invalid operation");
+        }
+        return result;
+    }
+    enum RomanNumeral {
+        I(1), IV(4), V(5), IX(9), X(10),
+        XL(40), L(50), XC(90), C(100);
+
+        private int value;
+
+        RomanNumeral(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static List<RomanNumeral> getReverseSortedValues() {
+            return Arrays.stream(values())
+                    .sorted(Comparator.comparing((RomanNumeral e) -> e.value).reversed())
+                    .collect(Collectors.toList());
+        }
+    }
+    public static String arabicToRoman(int number){
+
+        if ((number <= 0) || (number > 4000)) {
+            throw new IllegalArgumentException(number + " is not in range (0,4000]");
+        }
+
+        List<RomanNumeral> romanNumerals = RomanNumeral.getReverseSortedValues();
+
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+
+        while ((number > 0) && (i < romanNumerals.size())) {
+            RomanNumeral currentSymbol = romanNumerals.get(i);
+            if (currentSymbol.getValue() <= number) {
+                sb.append(currentSymbol.name());
+                number -= currentSymbol.getValue();
+            } else {
+                i++;
+            }
+        }
+
+        return sb.toString();
+
+
+    }
+    public static void displayResult(int result, boolean isRomanian){
+        if (isRomanian) {
+            String romanianResult = arabicToRoman(result);
+            System.out.println("Result :" + romanianResult);
+        }
+        else{
+            System.out.println("Result :" + result);
+        }
+    }
+    public static void main(String[] args) {
+        System.out.println("Enter two operand (1..10) expression (+-*/): ");
+        Scanner scan = new Scanner(System.in);
+        String[] inputString = scan.nextLine().split(" ");
+        check(inputString.length);
+        int result = calculate (convert(inputString[0]), convert(inputString[2]), inputString[1]);
+        boolean isRomanian = false;
+        try {
+            int test = Integer.parseInt(inputString[2]);
+        } catch (NumberFormatException e){
+            isRomanian = true;
+        }
+        displayResult(result, isRomanian);
+    }
+}
+
